@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voice_assistance/pallete.dart';
+import 'package:voice_gpt/pallete.dart';
 
 class FeatureBox extends StatelessWidget {
   final Color color;
@@ -33,7 +33,7 @@ class FeatureBox extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 headerText,
-                style: TextStyle( 
+                style: TextStyle(
                   fontFamily: "Cera Pro",
                   color: Pallete.mainFontColor,
                   fontSize: 18,

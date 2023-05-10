@@ -1,6 +1,6 @@
 {
-    "name": "voice_assistance",
-    "short_name": "voice_assistance",
+    "name": "voice_gpt",
+    "short_name": "voice_gpt",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

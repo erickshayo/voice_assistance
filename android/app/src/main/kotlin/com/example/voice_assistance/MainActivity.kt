@@ -1,4 +1,4 @@
-package com.example.voice_assistance
+package com.sanel.voice_gpt
 
 import io.flutter.embedding.android.FlutterActivity
 

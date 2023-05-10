@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:voice_assistance/feature_box.dart';
-import 'package:voice_assistance/pallete.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+import 'package:voice_gpt/feature_box.dart';
+import 'package:voice_gpt/openai_service.dart';
+import 'package:voice_gpt/pallete.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +13,43 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final speechToText = SpeechToText();
+  String lastWords = "";
+  final OpenAIService openAIService = OpenAIService();
+
+  @override
+  void initState() {
+    super.initState();
+    initSpeechToText();
+  }
+
+  Future<void> initSpeechToText() async {
+    await speechToText.initialize();
+    setState(() {});
+  }
+
+  Future<void> startListening() async {
+    await speechToText.listen(onResult: onSpeechResult);
+    setState(() {});
+  }
+
+  Future<void> stopListening() async {
+    await speechToText.stop();
+    setState(() {});
+  }
+
+  void onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      lastWords = result.recognizedWords;
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    speechToText.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,10 +150,22 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         child: FloatingActionButton(
-          onPressed: () {}, 
-          child: Icon(Icons.mic),),
+          backgroundColor: Pallete.firstSuggestionBoxColor,
+          onPressed: () async {
+            if (await speechToText.hasPermission &&
+                speechToText.isNotListening) {
+              await startListening();
+            } else if (speechToText.isListening) {
+              await openAIService.isArtPromptAPI(lastWords);
+              await stopListening();
+            } else {
+              initSpeechToText();
+            }
+          },
+          child: Icon(Icons.mic),
+        ),
       ),
     );
   }
